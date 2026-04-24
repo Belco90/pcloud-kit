@@ -115,6 +115,26 @@ describe('initOauthToken', () => {
 		expect(win._listeners).toHaveLength(0)
 	})
 
+	it('throws when window.open returns null (popup blocked)', async () => {
+		const win = makeFakeWindow('https://example.com')
+		win.open = () => null as unknown as FakeWindow
+		vi.stubGlobal('window', win)
+		vi.stubGlobal('location', win.location)
+
+		const { initOauthToken } = await import('../../src/oauth-browser')
+
+		expect(() =>
+			initOauthToken({
+				clientId: 'abc',
+				redirectUri: 'https://example.com/cb',
+				receiveToken: () => {},
+			}),
+		).toThrow(/blocked by the browser/)
+
+		// listener was never registered
+		expect(win._listeners).toHaveLength(0)
+	})
+
 	it('does not attach any __setPcloudToken global', async () => {
 		const win = makeFakeWindow('https://example.com') as FakeWindow & {
 			__setPcloudToken?: unknown

@@ -18,5 +18,6 @@ export function coalesceKey(
 		.toSorted(([a], [b]) => a.localeCompare(b))
 		.map(([k, v]) => `${k}=${v}`)
 		.join('&')
-	return `${scope ?? ''}|${method}?${sorted}`
+	const key = `${method}?${sorted}`
+	return scope !== undefined ? `${scope}|${key}` : key
 }

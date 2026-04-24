@@ -62,4 +62,10 @@ describe('coalesceKey', () => {
 		const k2 = coalesceKey('listfolder', { folderid: '0' }, 'client-a')
 		expect(k1).toBe(k2)
 	})
+
+	it('omits the scope separator when scope is undefined', () => {
+		const k = coalesceKey('listfolder', { folderid: '0' })
+		expect(k.startsWith('|')).toBe(false)
+		expect(k).toBe('listfolder?folderid=0')
+	})
 })

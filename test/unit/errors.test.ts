@@ -35,12 +35,16 @@ describe('PcloudApiError', () => {
 			auth: 'SECRET-PCLOUD',
 			client_secret: 'SECRET-APP',
 			password: 'SECRET-PASS',
+			code: 'SECRET-OAUTH-CODE',
+			request_id: 'SECRET-REQUEST-ID',
 		})
 		expect(err.params).toEqual({ folderid: '0' })
 		expect(err.params).not.toHaveProperty('access_token')
 		expect(err.params).not.toHaveProperty('auth')
 		expect(err.params).not.toHaveProperty('client_secret')
 		expect(err.params).not.toHaveProperty('password')
+		expect(err.params).not.toHaveProperty('code')
+		expect(err.params).not.toHaveProperty('request_id')
 	})
 
 	it('does not leak secrets in message or JSON representation', () => {

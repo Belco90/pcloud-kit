@@ -27,6 +27,7 @@ import { PcloudNetworkError } from './errors'
 import * as methods from './methods/index'
 import { apiRequest, type AuthEntry } from './transport/request'
 import { assert } from './util/assert'
+import { randomString } from './util/random'
 
 const PCLOUD_HOST_PATTERN = /^[a-z0-9-]+\.pcloud\.com$/
 
@@ -106,7 +107,7 @@ export function createClient(opts: CreateClientOptions): Client {
 	let apiServer = opts.apiServer ?? DEFAULT_API_SERVER
 	const clientType = opts.type ?? 'oauth'
 	const coalesceReads = opts.coalesceReads !== false
-	const coalesceScope = `c${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`
+	const coalesceScope = `c${randomString(12)}`
 
 	const callInternal = async <T>(
 		method: string,

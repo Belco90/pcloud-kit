@@ -1,4 +1,11 @@
-const SECRET_KEYS = new Set(['access_token', 'auth', 'client_secret', 'password'])
+const SECRET_KEYS = new Set([
+	'access_token',
+	'auth',
+	'client_secret',
+	'password',
+	'code',
+	'request_id',
+])
 
 function stripSecretParams(params: Record<string, unknown>): Record<string, unknown> {
 	const safe: Record<string, unknown> = {}
@@ -12,7 +19,8 @@ export class PcloudApiError extends Error {
 	readonly result: number
 	readonly method: string
 	/** Method parameters echoed back for debugging. Known secret keys
-	 * (access_token, auth, client_secret, password) are stripped. */
+	 * (access_token, auth, client_secret, password, code, request_id)
+	 * are stripped. */
 	readonly params?: Readonly<Record<string, unknown>>
 
 	constructor(result: number, message: string, method: string, params?: Record<string, unknown>) {

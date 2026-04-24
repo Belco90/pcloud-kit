@@ -48,6 +48,13 @@ export function initOauthToken(options: OAuthTokenOptions): void {
 	})
 
 	const popupRef = window.open(oauthUrl, 'oauth', 'width=680,height=700')
+	if (popupRef === null) {
+		throw new Error(
+			'Failed to open pCloud OAuth popup (blocked by the browser?). ' +
+				'Ensure initOauthToken is called from a user gesture.',
+		)
+	}
+
 	const expectedOrigin = window.location.origin
 
 	const handler = (event: MessageEvent): void => {

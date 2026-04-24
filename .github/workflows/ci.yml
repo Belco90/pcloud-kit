@@ -7,9 +7,17 @@ on:
   pull_request:
 
 jobs:
-  ci:
-    name: CI
+  validate:
+    name: ${{ matrix.script }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        script:
+          - format:check
+          - lint
+          - type-check
+          - test
+          - build
     steps:
       - uses: actions/checkout@v4
 
@@ -21,19 +29,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
-      - name: Format check
-        run: pnpm format:check
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Type check
-        run: pnpm type-check
-
-      - name: Test
-        run: pnpm test
-
-      - name: Build
-        run: pnpm build
+      - name: ${{ matrix.script }}
+        run: pnpm ${{ matrix.script }}

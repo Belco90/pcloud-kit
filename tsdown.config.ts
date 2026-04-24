@@ -7,7 +7,6 @@ export default defineConfig({
     "oauth-browser": "src/oauth-browser.ts",
     errors: "src/errors.ts",
   },
-  dts: true,
   sourcemap: true,
   platform: "neutral",
   deps: { neverBundle: [/^node:/] },

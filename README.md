@@ -212,6 +212,8 @@ If you operate or pass through any of the following, disable query-string captur
 - APM and tracing (OpenTelemetry HTTP spans, Datadog/New Relic/Sentry breadcrumbs that record outbound URLs)
 - CI logs that print fetch URLs on failure
 
+The server-side OAuth code exchange (`getTokenFromCode`) is exempt: `client_id`, `code`, and `client_secret` travel in the POST body (per RFC 6749 §3.2), so they don't appear in URLs.
+
 ## Low-level `client.call()` — 160+ endpoints
 
 The convenience methods cover the most common operations. For everything else, `call()` is constrained to the `PcloudMethodName` literal union:
@@ -244,7 +246,10 @@ const client = createClient({
 	coalesceReads: false, // disable in-flight deduplication of identical GET reads
 })
 
-// Swap the token on an existing client (e.g. after token refresh)
+// Swap the token on an existing client (e.g. after token refresh, or
+// when reusing a long-lived client across multi-tenant requests).
+// Resets the in-flight read coalesce cache so reads under the old
+// token can't be served to a caller that now holds a different token.
 client.setToken(newToken)
 
 // Re-detect the nearest server

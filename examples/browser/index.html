@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>pcloud-sdk-ts — browser scenario</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style>
+			body {
+				font-family: ui-sans-serif, system-ui, sans-serif;
+				max-width: 720px;
+				margin: 2rem auto;
+				padding: 0 1rem;
+			}
+			fieldset {
+				margin-bottom: 1.25rem;
+			}
+			label {
+				display: block;
+				margin: 0.25rem 0;
+			}
+			input[type='text'] {
+				width: 100%;
+				font: inherit;
+				padding: 0.25rem 0.5rem;
+			}
+			button {
+				margin-right: 0.5rem;
+			}
+			pre {
+				background: #f4f4f4;
+				padding: 1rem;
+				border-radius: 4px;
+				overflow: auto;
+				max-height: 320px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>pcloud-sdk-ts — browser scenario</h1>
+		<p>
+			Requests are intercepted by an MSW service worker and respond with the fixture data from
+			<code>examples/shared/handlers.ts</code>.
+		</p>
+
+		<fieldset>
+			<legend>Token</legend>
+			<label>
+				OAuth token (sent as <code>?access_token=</code>)
+				<input id="oauth-token" type="text" value="oauth-test-access-token" />
+			</label>
+			<label>
+				pCloud auth token (sent as <code>?auth=</code>)
+				<input id="pcloud-token" type="text" value="pcloud-test-token" />
+			</label>
+		</fieldset>
+
+		<fieldset>
+			<legend>Actions</legend>
+			<button id="btn-list-oauth">List folder (oauth mode)</button>
+			<button id="btn-list-pcloud">List folder (pcloud mode)</button>
+			<button id="btn-oauth-poll">OAuth login (poll flow)</button>
+			<button id="btn-error">Trigger error path</button>
+		</fieldset>
+
+		<h2>Output</h2>
+		<pre id="output">(idle)</pre>
+
+		<script type="module" src="./demo.ts"></script>
+	</body>
+</html>

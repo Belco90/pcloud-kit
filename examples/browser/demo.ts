@@ -1,6 +1,5 @@
-import { createClient } from 'pcloud-sdk'
-import { initOauthPollToken } from 'pcloud-sdk/oauth-browser'
-
+import { createClient } from '../../src'
+import { initOauthPollToken } from '../../src/oauth-browser'
 import { errorHandlers } from '../shared/handlers'
 import { worker } from './worker'
 

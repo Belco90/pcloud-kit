@@ -221,7 +221,9 @@ describe('randomString', () => {
 		const spy = vi.spyOn(globalThis.crypto, 'getRandomValues')
 		const out = randomString(40)
 		expect(out).toHaveLength(40)
-		expect(spy).toHaveBeenCalledTimes(1)
+		// Rejection sampling can re-draw if bytes fall in the biased range,
+		// so we only assert it was called at least once.
+		expect(spy).toHaveBeenCalled()
 		expect(/^[A-Za-z0-9]{40}$/.test(out)).toBe(true)
 	})
 

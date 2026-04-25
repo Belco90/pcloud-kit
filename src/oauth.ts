@@ -39,13 +39,20 @@ export async function getTokenFromCode(
 	assert(clientId, '`clientId` is required')
 	assert(appSecret, '`appSecret` is required')
 
+	// Send everything in the POST body — `code` is a single-use, short-lived
+	// credential, and OAuth2 RFC 6749 §3.2 requires the token endpoint to use
+	// POST body params anyway. Keeps `code` (and `client_secret`) out of any
+	// URL-capturing tier (proxies, APM, request logs).
 	return apiRequest<{ access_token: string; locationid: number }>(
 		'eapi.pcloud.com',
 		'oauth2_token',
 		{
 			method: 'POST',
-			params: { client_id: clientId, code },
-			body: new URLSearchParams({ client_secret: appSecret }),
+			body: new URLSearchParams({
+				client_id: clientId,
+				code,
+				client_secret: appSecret,
+			}),
 		},
 	)
 }

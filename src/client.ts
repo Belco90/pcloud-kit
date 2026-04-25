@@ -107,7 +107,7 @@ export function createClient(opts: CreateClientOptions): Client {
 	let apiServer = opts.apiServer ?? DEFAULT_API_SERVER
 	const clientType = opts.type ?? 'oauth'
 	const coalesceReads = opts.coalesceReads !== false
-	const coalesceScope = `c${randomString(12)}`
+	let coalesceScope = `c${randomString(12)}`
 
 	const callInternal = async <T>(
 		method: string,
@@ -150,6 +150,9 @@ export function createClient(opts: CreateClientOptions): Client {
 
 		setToken(newToken: string): void {
 			token = newToken
+			// Bust the coalesce key space so in-flight reads under the previous
+			// token can't be returned to callers that now use a different one.
+			coalesceScope = `c${randomString(12)}`
 		},
 
 		async setupProxy(): Promise<string> {

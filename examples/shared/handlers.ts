@@ -38,13 +38,13 @@ export function makeHandlers(options: MakeHandlersOptions = {}) {
 			return HttpResponse.json({ result: 0, ...USER })
 		}),
 
-		// OAuth code exchange — POST with `client_secret` in the URLSearchParams body.
+		// OAuth code exchange — POST with `client_id`, `code`, and `client_secret`
+		// all in the URLSearchParams body (RFC 6749 §3.2).
 		http.post(`${apiHost}/oauth2_token`, async ({ request }) => {
-			const url = new URL(request.url)
-			const clientId = url.searchParams.get('client_id')
-			const code = url.searchParams.get('code')
 			const bodyText = await request.text()
 			const bodyParams = new URLSearchParams(bodyText)
+			const clientId = bodyParams.get('client_id')
+			const code = bodyParams.get('code')
 			const clientSecret = bodyParams.get('client_secret')
 
 			if (clientId !== CLIENT_ID || code !== CODE || clientSecret !== APP_SECRET) {

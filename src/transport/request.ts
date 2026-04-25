@@ -132,7 +132,17 @@ export async function apiRequest<T>(
 
 	const executor = trackingRun ?? run
 
-	if (!noCoalesce && verb === 'GET' && isReadMethod(method)) {
+	// If a caller passes an `auth` value but no `coalesceScope`, two concurrent
+	// reads with different tokens would collide on the same coalesce key
+	// (urlParams excludes auth by design). Disable coalescing in that case
+	// rather than risk returning one caller's data to another.
+	const allowCoalesce =
+		!noCoalesce &&
+		verb === 'GET' &&
+		isReadMethod(method) &&
+		!(auth !== undefined && coalesceScope === undefined)
+
+	if (allowCoalesce) {
 		return coalesce(coalesceKey(method, urlParams, coalesceScope), executor)
 	}
 

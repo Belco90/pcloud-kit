@@ -31,7 +31,7 @@ describe('getTokenFromCode', () => {
 		)
 	})
 
-	it('sends client_secret in the POST body, not the URL', async () => {
+	it('sends client_id, code, and client_secret in the POST body, not the URL', async () => {
 		let capturedUrl = ''
 		let capturedInit: RequestInit | undefined
 		vi.stubGlobal('fetch', (url: string, init?: RequestInit) => {
@@ -46,14 +46,17 @@ describe('getTokenFromCode', () => {
 
 		await getTokenFromCode('the-code', 'the-client', 'the-secret')
 
-		expect(capturedUrl).toContain('client_id=the-client')
-		expect(capturedUrl).toContain('code=the-code')
-		expect(capturedUrl).not.toContain('the-secret')
+		expect(capturedUrl).not.toContain('client_id=')
+		expect(capturedUrl).not.toContain('code=')
 		expect(capturedUrl).not.toContain('client_secret=')
+		expect(capturedUrl).not.toContain('the-secret')
+		expect(capturedUrl).not.toContain('the-code')
 
 		expect(capturedInit?.method).toBe('POST')
 		const body = capturedInit?.body
 		expect(body).toBeInstanceOf(URLSearchParams)
+		expect((body as URLSearchParams).get('client_id')).toBe('the-client')
+		expect((body as URLSearchParams).get('code')).toBe('the-code')
 		expect((body as URLSearchParams).get('client_secret')).toBe('the-secret')
 	})
 })

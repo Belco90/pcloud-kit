@@ -170,6 +170,52 @@ describe('apiRequest', () => {
 		expect(fetchCount).toBe(2)
 	})
 
+	it('does not coalesce reads when auth is set without coalesceScope', async () => {
+		let fetchCount = 0
+		vi.stubGlobal('fetch', () => {
+			fetchCount++
+			return Promise.resolve(new Response(JSON.stringify({ result: 0 }), { status: 200 }))
+		})
+
+		await Promise.all([
+			apiRequest('api.pcloud.com', 'listfolder', {
+				params: { folderid: '0' },
+				auth: ['access_token', 'TOKEN_A'],
+			}),
+			apiRequest('api.pcloud.com', 'listfolder', {
+				params: { folderid: '0' },
+				auth: ['access_token', 'TOKEN_B'],
+			}),
+		])
+
+		expect(fetchCount).toBe(2)
+	})
+
+	it('busts coalesce cache when setToken is called on a client', async () => {
+		let resolveFirst: (() => void) | undefined
+		let fetchCount = 0
+		vi.stubGlobal('fetch', () => {
+			fetchCount++
+			return new Promise<Response>((resolve) => {
+				const fire = (): void =>
+					resolve(
+						new Response(JSON.stringify(apiOk({ metadata: { folderid: 0 } })), { status: 200 }),
+					)
+				if (fetchCount === 1) resolveFirst = fire
+				else fire()
+			})
+		})
+
+		const client = createClient({ token: 'token-a' })
+		const first = client.listfolder(0)
+		client.setToken('token-b')
+		const second = client.listfolder(0)
+		resolveFirst?.()
+		await Promise.all([first, second])
+
+		expect(fetchCount).toBe(2)
+	})
+
 	it('still coalesces reads within a single client', async () => {
 		let fetchCount = 0
 		vi.stubGlobal('fetch', () => {

@@ -25,8 +25,11 @@ import { isAuthMethod } from './constants/methods'
 import { DEFAULT_API_SERVER, FALLBACK_API_SERVER } from './constants/servers'
 import { PcloudNetworkError } from './errors'
 import * as methods from './methods/index'
-import { apiRequest } from './transport/request'
+import { apiRequest, type AuthEntry } from './transport/request'
 import { assert } from './util/assert'
+import { randomString } from './util/random'
+
+const PCLOUD_HOST_PATTERN = /^[a-z0-9-]+\.pcloud\.com$/
 
 type Primitive = string | number | boolean
 
@@ -104,23 +107,24 @@ export function createClient(opts: CreateClientOptions): Client {
 	let apiServer = opts.apiServer ?? DEFAULT_API_SERVER
 	const clientType = opts.type ?? 'oauth'
 	const coalesceReads = opts.coalesceReads !== false
+	let coalesceScope = `c${randomString(12)}`
 
 	const callInternal = async <T>(
 		method: string,
 		params: Record<string, Primitive | undefined> = {},
 		callOpts: CallOptions = {},
 	): Promise<T> => {
-		const merged: Record<string, Primitive | undefined> = { ...params }
-
-		if (isAuthMethod(method)) {
-			merged[clientType === 'pcloud' ? 'auth' : 'access_token'] = token
-		}
+		const authEntry: AuthEntry | undefined = isAuthMethod(method)
+			? [clientType === 'pcloud' ? 'auth' : 'access_token', token]
+			: undefined
 
 		const execute = (): Promise<T> =>
 			apiRequest<T>(apiServer, method, {
 				...callOpts,
-				params: merged,
+				params,
+				...(authEntry ? { auth: authEntry } : {}),
 				noCoalesce: !coalesceReads,
+				coalesceScope,
 			})
 
 		try {
@@ -146,12 +150,15 @@ export function createClient(opts: CreateClientOptions): Client {
 
 		setToken(newToken: string): void {
 			token = newToken
+			// Bust the coalesce key space so in-flight reads under the previous
+			// token can't be returned to callers that now use a different one.
+			coalesceScope = `c${randomString(12)}`
 		},
 
 		async setupProxy(): Promise<string> {
 			const res = await callInternal<{ api: string[] }>('getapiserver')
 			const server = res.api[0]
-			if (server) apiServer = server
+			if (server && PCLOUD_HOST_PATTERN.test(server)) apiServer = server
 			return apiServer
 		},
 

@@ -1,3 +1,9 @@
+// This module contains both browser-safe and server-only OAuth helpers.
+// `buildAuthorizeUrl()` is safe to use in browser code: it only builds the
+// authorize URL from public values. `getTokenFromCode()` must remain
+// server-side — it requires the OAuth app secret, which must never reach
+// client-side code, and throws at runtime if called in a browser.
+
 import { apiRequest } from './transport/request'
 import { assert } from './util/assert'
 
@@ -24,15 +30,29 @@ export async function getTokenFromCode(
 	clientId: string,
 	appSecret: string,
 ): Promise<{ access_token: string; locationid: number }> {
+	if (typeof window !== 'undefined') {
+		throw new Error(
+			'getTokenFromCode must not be called from a browser — it requires an app secret. Use oauth-browser for the browser flow.',
+		)
+	}
 	assert(code, '`code` is required')
 	assert(clientId, '`clientId` is required')
 	assert(appSecret, '`appSecret` is required')
 
+	// Send everything in the POST body — `code` is a single-use, short-lived
+	// credential, and OAuth2 RFC 6749 §3.2 requires the token endpoint to use
+	// POST body params anyway. Keeps `code` (and `client_secret`) out of any
+	// URL-capturing tier (proxies, APM, request logs).
 	return apiRequest<{ access_token: string; locationid: number }>(
 		'eapi.pcloud.com',
 		'oauth2_token',
 		{
-			params: { client_id: clientId, client_secret: appSecret, code },
+			method: 'POST',
+			body: new URLSearchParams({
+				client_id: clientId,
+				code,
+				client_secret: appSecret,
+			}),
 		},
 	)
 }

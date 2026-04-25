@@ -22,6 +22,19 @@ export default defineConfig({
 					setupFiles: ['examples/node/vitest.setup.ts'],
 				},
 			},
+			{
+				test: {
+					name: 'scenario-browser',
+					include: ['examples/browser/**/*.scenario.test.ts'],
+					setupFiles: ['examples/browser/vitest.setup.ts'],
+					browser: {
+						enabled: true,
+						provider: 'playwright',
+						instances: [{ browser: 'chromium' }],
+						headless: true,
+					},
+				},
+			},
 		],
 	},
 })

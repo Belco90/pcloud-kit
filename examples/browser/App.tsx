@@ -86,7 +86,7 @@ export function App({ realMode }: AppProps): React.JSX.Element {
 
 	return (
 		<>
-			<h1>pcloud-sdk-ts — browser scenario</h1>
+			<h1>pcloud-kit — browser scenario</h1>
 			<p>
 				{realMode ? (
 					<>

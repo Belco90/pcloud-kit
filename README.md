@@ -1,4 +1,4 @@
-# pcloud-sdk
+# pcloud-kit
 
 Unofficial, zero-dependency, type-safe pCloud SDK for modern JavaScript runtimes.
 
@@ -11,7 +11,7 @@ A modern alternative to [`pcloud-sdk-js`](https://www.npmjs.com/package/pcloud-s
 
 ## Why
 
-|                | `pcloud-sdk-js`                              | `pcloud-sdk`                                  |
+|                | `pcloud-sdk-js`                              | `pcloud-kit`                                  |
 | -------------- | -------------------------------------------- | --------------------------------------------- |
 | Runtime deps   | `isomorphic-fetch`, `form-data`, `invariant` | none                                          |
 | TypeScript     | untyped JS                                   | strict, `exactOptionalPropertyTypes`          |
@@ -30,14 +30,14 @@ A modern alternative to [`pcloud-sdk-js`](https://www.npmjs.com/package/pcloud-s
 ## Install
 
 ```bash
-npm install pcloud-sdk
-# pnpm add pcloud-sdk / yarn add pcloud-sdk / bun add pcloud-sdk
+npm install pcloud-kit
+# pnpm add pcloud-kit / yarn add pcloud-kit / bun add pcloud-kit
 ```
 
 ## Quick start
 
 ```ts
-import { createClient } from 'pcloud-sdk'
+import { createClient } from 'pcloud-kit'
 
 const client = createClient({ token: process.env.PCLOUD_TOKEN! })
 
@@ -53,7 +53,7 @@ for (const entry of root.contents ?? []) {
 ### OAuth — server-side code flow (Node)
 
 ```ts
-import { buildAuthorizeUrl, getTokenFromCode } from 'pcloud-sdk/oauth'
+import { buildAuthorizeUrl, getTokenFromCode } from 'pcloud-kit/oauth'
 
 // Step 1: redirect the user to pCloud's consent screen
 const url = buildAuthorizeUrl({
@@ -75,7 +75,7 @@ const client = createClient({ token: access_token })
 ### OAuth — browser popup flow
 
 ```ts
-import { initOauthToken, popup } from 'pcloud-sdk/oauth-browser'
+import { initOauthToken, popup } from 'pcloud-kit/oauth-browser'
 
 // On the main page: opens a popup and wires the callback
 initOauthToken({
@@ -93,7 +93,7 @@ popup()
 For environments where a redirect URI is impractical, `initOauthPollToken` uses the `poll_token` response type and simultaneously polls both EU and US servers:
 
 ```ts
-import { initOauthPollToken } from 'pcloud-sdk/oauth-browser'
+import { initOauthPollToken } from 'pcloud-kit/oauth-browser'
 
 initOauthPollToken({
 	clientId: 'YOUR_CLIENT_ID',
@@ -184,7 +184,7 @@ const stream = await client.download(url)
 ## Error handling
 
 ```ts
-import { PcloudApiError, PcloudNetworkError } from 'pcloud-sdk'
+import { PcloudApiError, PcloudNetworkError } from 'pcloud-kit'
 
 try {
 	await client.listfolder(0)
@@ -205,7 +205,7 @@ try {
 }
 ```
 
-The error classes can also be imported from `pcloud-sdk/errors` to avoid pulling in the full client.
+The error classes can also be imported from `pcloud-kit/errors` to avoid pulling in the full client.
 
 ## Logging and proxies
 
@@ -273,7 +273,7 @@ import pCloudSdk from 'pcloud-sdk-js'
 const client = pCloudSdk.createClient(token)
 
 // After
-import { createClient } from 'pcloud-sdk'
+import { createClient } from 'pcloud-kit'
 const client = createClient({ token })
 ```
 

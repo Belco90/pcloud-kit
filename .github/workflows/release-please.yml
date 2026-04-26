@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       publish_tag:
-        description: "Existing tag to (re-)publish, e.g. pcloud-kit-v0.1.1"
+        description: 'Existing tag to (re-)publish, e.g. pcloud-kit-v0.1.1'
         required: true
         type: string
 

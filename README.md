@@ -4,11 +4,6 @@ Unofficial, zero-dependency, type-safe pCloud SDK for modern JavaScript runtimes
 
 A modern alternative to [`pcloud-sdk-js`](https://www.npmjs.com/package/pcloud-sdk-js) with full TypeScript support, and no runtime dependencies.
 
-> [!IMPORTANT]
-> **Vibe Coding Disclaimer**
->
-> This package was developed entirely with AI. Please review and test carefully before production use.
-
 ## Why
 
 |                | `pcloud-sdk-js`                              | `pcloud-kit`                                  |

@@ -15,7 +15,7 @@ export function remoteupload(ctx: ClientContext) {
 
 		options.onBegin?.()
 
-		const progresshash = `pcloud-sdk-${Date.now()}-${randomString(16)}`
+		const progresshash = `pcloud-kit-${Date.now()}-${randomString(16)}`
 
 		let stopPoll = false
 		let pollTimer: ReturnType<typeof setTimeout> | undefined

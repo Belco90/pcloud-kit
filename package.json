@@ -1,5 +1,5 @@
 {
-	"name": "pcloud-sdk",
+	"name": "pcloud-kit",
 	"version": "0.1.0",
 	"description": "Unofficial pCloud SDK",
 	"keywords": [
@@ -83,9 +83,12 @@
 		"pre-commit": "pnpm exec nano-staged"
 	},
 	"nano-staged": {
-		"*.{ts,js,mts,mjs,json}": [
+		"*.{ts,js,mts,mjs}": [
 			"oxfmt",
 			"oxlint --fix"
+		],
+		"*.json": [
+			"oxfmt"
 		]
 	},
 	"engines": {

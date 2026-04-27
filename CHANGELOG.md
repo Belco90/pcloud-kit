@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/Belco90/pcloud-kit/compare/pcloud-kit-v0.1.2...pcloud-kit-v0.2.0) (2026-04-27)
+
+
+### Features
+
+* add getthumblink client method ([#14](https://github.com/Belco90/pcloud-kit/issues/14)) ([82a6680](https://github.com/Belco90/pcloud-kit/commit/82a6680a013746aeedb8e085995cfc0985c91b9f))
+
 ## [0.1.2](https://github.com/Belco90/pcloud-kit/compare/pcloud-kit-v0.1.1...pcloud-kit-v0.1.2) (2026-04-26)
 
 

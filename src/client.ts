@@ -66,6 +66,7 @@ export interface Client {
 	renamefolder(folderid: number, toname: string): Promise<FolderMetadata>
 	getfilelink(fileid: number): Promise<string>
 	getthumblink(fileid: number, options?: ThumbOptions): Promise<string>
+	getthumbslinks(fileids: number[], options?: ThumbOptions): Promise<ThumbResult[]>
 	sharefolder(
 		folderid: number,
 		mail: string,
@@ -174,6 +175,7 @@ export function createClient(opts: CreateClientOptions): Client {
 		renamefolder: methods.renamefolder(ctx),
 		getfilelink: methods.getfilelink(ctx),
 		getthumblink: methods.getthumblink(ctx),
+		getthumbslinks: methods.getthumbslinks(ctx),
 		sharefolder: methods.sharefolder(ctx),
 		appshare: methods.appshare(ctx),
 		login: methods.login(ctx),

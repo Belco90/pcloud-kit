@@ -137,6 +137,7 @@ These are fully typed and bound directly on the client:
 | `downloadfile`     | `(fileid: number, destination: string \| WritableStream<Uint8Array>, options?: DownloadOptions)` | `Promise<FileLocal>`                                        |
 | `remoteupload`     | `(url: string, folderid?: number, options?: RemoteUploadOptions)`                                | `Promise<{ metadata: FileMetadata }>`                       |
 | `getthumbsfileids` | `(fileids: number[], receiveThumb: (thumb: ThumbResult) => void, options?: ThumbOptions)`        | `Promise<ThumbResult[]>`                                    |
+| `getthumbslinks`   | `(fileids: number[], options?: ThumbOptions)`                                                    | `Promise<ThumbResult[]>`                                    |
 
 ## Uploads
 
